@@ -25,7 +25,6 @@ import co.cask.cdap.common.NamespaceCannotBeCreatedException;
 import co.cask.cdap.common.NamespaceCannotBeDeletedException;
 import co.cask.cdap.common.NamespaceNotFoundException;
 import co.cask.cdap.common.conf.CConfiguration;
-import co.cask.cdap.common.conf.Constants;
 import co.cask.cdap.common.namespace.NamespaceAdmin;
 import co.cask.cdap.common.security.AuthEnforce;
 import co.cask.cdap.data2.dataset2.DatasetFramework;
@@ -49,14 +48,12 @@ import com.google.common.base.Function;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Predicate;
 import com.google.common.base.Strings;
-import com.google.common.base.Throwables;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import org.apache.hadoop.security.UserGroupInformation;
-import org.apache.hadoop.security.authentication.util.KerberosName;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -179,13 +176,16 @@ public final class DefaultNamespaceAdmin implements NamespaceAdmin {
       } else {
         ugi = impersonator.getUGI(namespace);
       }
-      ImpersonationUtils.doAs(ugi, new Callable<Void>() {
-        @Override
-        public Void call() throws Exception {
-          storageProviderNamespaceAdmin.get().create(metadata);
-          return null;
-        }
-      });
+
+      if (!NamespaceId.SYSTEM.equals(namespace)) {
+        ImpersonationUtils.doAs(ugi, new Callable<Void>() {
+          @Override
+          public Void call() throws Exception {
+            storageProviderNamespaceAdmin.get().create(metadata);
+            return null;
+          }
+        });
+      }
     } catch (Throwable t) {
       // failed to create namespace in underlying storage so delete the namespace meta stored in the store earlier
       deleteNamespaceMeta(metadata.getNamespaceId());
@@ -283,7 +283,7 @@ public final class DefaultNamespaceAdmin implements NamespaceAdmin {
       // create default namespace, and hence deleting it may cause undeterministic behavior.
       // Another reason for not deleting the default namespace is that we do not want to call a delete on the default
       // namespace in the storage provider (Hive, HBase, etc), since we re-use their default namespace.
-      if (!NamespaceId.DEFAULT.equals(namespaceId)) {
+      if (!NamespaceId.DEFAULT.equals(namespaceId) && !NamespaceId.SYSTEM.equals(namespaceId)) {
         // Finally delete namespace from MDS and remove from cache
         deleteNamespaceMeta(namespaceId);
 

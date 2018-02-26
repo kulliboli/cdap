@@ -48,18 +48,23 @@ public final class DefaultNamespaceEnsurer extends AbstractService {
         return new AbstractService() {
           @Override
           protected void doStart() {
+            createNamespace(NamespaceMeta.SYSTEM);
+            createNamespace(NamespaceMeta.DEFAULT);
+          }
+
+          private void createNamespace(NamespaceMeta namespaceMeta) {
             try {
-              namespaceAdmin.create(NamespaceMeta.DEFAULT);
+              namespaceAdmin.create(namespaceMeta);
               // if there is no exception, assume successfully created and break
-              LOG.info("Successfully created namespace '{}'.", NamespaceMeta.DEFAULT);
+              LOG.info("Successfully created namespace '{}'.", namespaceMeta);
               notifyStarted();
             } catch (FileAlreadyExistsException e) {
-              LOG.warn("Got exception while trying to create namespace '{}'.", NamespaceMeta.DEFAULT, e);
+              LOG.warn("Got exception while trying to create namespace '{}'.", namespaceMeta, e);
               // avoid retrying if its a FileAlreadyExistsException
               notifyStarted();
             } catch (NamespaceAlreadyExistsException e) {
               // default namespace already exists
-              LOG.info("Default namespace already exists.");
+              LOG.info("{} namespace already exists.", namespaceMeta.getName());
               notifyStarted();
             } catch (Exception e) {
               notifyFailed(e);

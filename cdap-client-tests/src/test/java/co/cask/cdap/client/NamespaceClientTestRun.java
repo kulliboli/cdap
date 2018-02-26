@@ -118,9 +118,11 @@ public class NamespaceClientTestRun extends ClientTestBase {
     // cleanup
     namespaceClient.deleteAll();
 
-    // verify that only the default namespace is left
-    Assert.assertEquals(1, namespaceClient.list().size());
-    Assert.assertEquals(Id.Namespace.DEFAULT.getId(), namespaceClient.list().get(0).getName());
+    // verify that only the default and system namespace are left
+    List<NamespaceMeta> namespaceList = namespaceClient.list();
+    Assert.assertEquals(2, namespaceList.size());
+    Assert.assertTrue(namespaceList.contains(NamespaceMeta.DEFAULT));
+    Assert.assertTrue(namespaceList.contains(NamespaceMeta.SYSTEM));
   }
 
   private void verifyReservedCreate() throws Exception {
@@ -146,12 +148,10 @@ public class NamespaceClientTestRun extends ClientTestBase {
     // Its lifecycle is already tested in NamespaceHttpHandlerTest
     namespaceClient.delete(NamespaceId.DEFAULT);
     namespaceClient.get(NamespaceId.DEFAULT);
-    try {
-      namespaceClient.delete(NamespaceId.SYSTEM);
-      Assert.fail(String.format("'%s' namespace must not exist", NamespaceId.SYSTEM.getNamespace()));
-    } catch (NotFoundException e) {
-      // expected
-    }
+    // deleting system namespace would only delete the applications and programs in it,
+    // the namespace would still be available
+    namespaceClient.delete(NamespaceId.SYSTEM);
+    namespaceClient.get(NamespaceId.SYSTEM);
   }
 
   private void waitForNamespaceCreation(NamespaceId namespace) throws IOException, UnauthenticatedException,
