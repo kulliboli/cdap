@@ -43,6 +43,10 @@ export default class PipelineRunButton extends Component {
   };
 
   runPipelineOrToggleConfig = () => {
+    if (this.props.runButtonLoading) {
+      return;
+    }
+
     if (keyValuePairsHaveMissingValues(this.props.runtimeArgs)) {
       this.toggleConfigModeless();
     } else {
@@ -88,20 +92,18 @@ export default class PipelineRunButton extends Component {
         <div className="btn-container">
           {
             this.props.runButtonLoading ?
-              <IconSVG
-                name="icon-spinner"
-                className="fa-spin"
-              />
+              (
+                <span className="text-success">
+                  <IconSVG name="icon-spinner" className="fa-spin" />
+                  <div className="button-label">Starting</div>
+                </span>
+              )
+
             :
               (
-                <span>
-                  <IconSVG
-                    name="icon-play"
-                    className="text-success"
-                  />
-                  <div className="button-label">
-                    Run
-                  </div>
+                <span className="text-success">
+                  <IconSVG name="icon-play"/>
+                  <div className="button-label">Run</div>
                 </span>
               )
           }
