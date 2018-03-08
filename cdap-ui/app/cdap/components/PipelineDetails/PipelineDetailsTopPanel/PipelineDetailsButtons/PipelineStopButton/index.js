@@ -113,20 +113,11 @@ export default class PipelineStopButton extends Component {
         <div className="btn-container">
           {
             this.props.stopButtonLoading ?
-              <IconSVG
-                name="icon-spinner"
-                className="fa-spin"
-              />
+              <IconSVG name="icon-spinner" className="fa-spin" />
             :
-              (
-                <span>
-                  <IconSVG name="icon-stop" />
-                  <div className="button-label">
-                    Stop
-                  </div>
-                </span>
-              )
+              <IconSVG name="icon-stop" />
           }
+          <div className="button-label">Stop</div>
         </div>
       </div>
     );

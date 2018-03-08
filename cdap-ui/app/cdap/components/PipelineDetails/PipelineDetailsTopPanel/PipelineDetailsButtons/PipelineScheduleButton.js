@@ -102,12 +102,12 @@ export default class PipelineScheduleButton extends Component {
   }
 
   renderScheduleButton() {
-    if ([StatusMapper.statusMap['DEPLOYED'], StatusMapper.statusMap['SCHEDULING']].indexOf(this.state.scheduleStatus) !== -1) {
+    if ([StatusMapper.statusMap['SCHEDULED'], StatusMapper.statusMap['SUSPENDING']].indexOf(this.state.scheduleStatus) !== -1) {
       return (
         <div
           onClick={this.toggleScheduler}
-          className={classnames("btn pipeline-action-btn pipeline-scheduler-btn", {"btn-select" : this.state.showScheduler})}
-          disabled={this.state.scheduleStatus === StatusMapper.statusMap['SCHEDULING']}
+          className="btn pipeline-action-btn pipeline-scheduler-btn"
+          disabled={this.state.scheduleStatus === StatusMapper.statusMap['SUSPENDING']}
         >
           <div className="btn-container">
             {
@@ -117,16 +117,12 @@ export default class PipelineScheduleButton extends Component {
                   className="fa-spin"
                 />
               :
-                (
-                  <span className="double-line">
-                    <IconSVG
-                      name="icon-runtimestarttime"
-                      className="schedule-icon"
-                    />
-                    <div className="button-label">Schedule</div>
-                  </span>
-                )
+                <IconSVG
+                  name="icon-runtimestarttime"
+                  className="unschedule-icon"
+                />
             }
+            <div className="button-label">Unschedule</div>
           </div>
         </div>
       );
@@ -135,8 +131,8 @@ export default class PipelineScheduleButton extends Component {
     return (
       <div
         onClick={this.toggleScheduler}
-        className="btn pipeline-action-btn pipeline-scheduler-btn"
-        disabled={this.state.scheduleStatus === StatusMapper.statusMap['SUSPENDING']}
+        className={classnames("btn pipeline-action-btn pipeline-scheduler-btn", {"btn-select" : this.state.showScheduler})}
+        disabled={this.state.scheduleStatus === StatusMapper.statusMap['SCHEDULING']}
       >
         <div className="btn-container">
           {
@@ -146,16 +142,12 @@ export default class PipelineScheduleButton extends Component {
                 className="fa-spin"
               />
             :
-              (
-                <span className="double-line">
-                  <IconSVG
-                    name="icon-runtimestarttime"
-                    className="unschedule-icon"
-                  />
-                  <div className="button-label">Unschedule</div>
-                </span>
-              )
+              <IconSVG
+                name="icon-runtimestarttime"
+                className="schedule-icon"
+              />
           }
+          <div className="button-label">Schedule</div>
         </div>
       </div>
     );
@@ -167,7 +159,7 @@ export default class PipelineScheduleButton extends Component {
     }
 
     return (
-      <div className="pipeline-action-container pipeline-scheduler-container">
+      <div className={classnames("pipeline-action-container pipeline-scheduler-container", {"active" : this.state.showScheduler})}>
         {this.renderScheduleError()}
         {this.renderScheduleButton()}
         {

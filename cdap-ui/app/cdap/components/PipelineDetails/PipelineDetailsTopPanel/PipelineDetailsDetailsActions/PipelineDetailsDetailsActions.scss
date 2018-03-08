@@ -20,7 +20,15 @@
   .pipeline-details-container {
     .pipeline-details-btn {
       .icon-info-circle {
-        color: $grey-01;
+        color: $grey-02;
+      }
+    }
+  }
+
+  .pipeline-actions-container {
+    .pipeline-actions-btn {
+      .icon-cog-empty {
+        fill: white;
       }
     }
   }

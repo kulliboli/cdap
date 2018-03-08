@@ -156,7 +156,7 @@ export default class PipelineDetailsActionsButton extends Component {
       return (
         <div className="btn pipeline-action-btn pipeline-actions-btn">
           <div className="btn-container">
-            <IconSVG name="icon-cog" />
+            <IconSVG name="icon-cog-empty" />
             <div className="button-label">
               Actions
             </div>
