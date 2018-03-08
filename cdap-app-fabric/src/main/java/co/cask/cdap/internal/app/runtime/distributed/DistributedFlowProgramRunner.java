@@ -42,6 +42,7 @@ import co.cask.cdap.proto.ProgramType;
 import co.cask.cdap.proto.id.ApplicationId;
 import co.cask.cdap.security.TokenSecureStoreRenewer;
 import co.cask.cdap.security.impersonation.Impersonator;
+import co.cask.cdap.security.spi.authentication.AuthenticationContext;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableSetMultimap;
 import com.google.common.collect.Iterables;
@@ -79,8 +80,9 @@ public final class DistributedFlowProgramRunner extends DistributedProgramRunner
                                CConfiguration cConfig, QueueAdmin queueAdmin, StreamAdmin streamAdmin,
                                TransactionExecutorFactory txExecutorFactory,
                                TokenSecureStoreRenewer tokenSecureStoreRenewer,
-                               Impersonator impersonator) {
-    super(twillRunner,  hConf, cConfig, tokenSecureStoreRenewer, impersonator);
+                               Impersonator impersonator,
+                               AuthenticationContext authenticationContext) {
+    super(twillRunner, hConf, cConfig, tokenSecureStoreRenewer, impersonator, authenticationContext);
     this.queueAdmin = queueAdmin;
     this.streamAdmin = streamAdmin;
     this.txExecutorFactory = txExecutorFactory;

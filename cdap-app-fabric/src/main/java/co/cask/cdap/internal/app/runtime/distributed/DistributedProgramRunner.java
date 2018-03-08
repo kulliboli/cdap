@@ -1,5 +1,5 @@
 /*
- * Copyright © 2014-2017 Cask Data, Inc.
+ * Copyright © 2014-2018 Cask Data, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -50,6 +50,7 @@ import co.cask.cdap.internal.app.runtime.codec.ProgramOptionsCodec;
 import co.cask.cdap.logging.context.LoggingContextHelper;
 import co.cask.cdap.security.TokenSecureStoreRenewer;
 import co.cask.cdap.security.impersonation.Impersonator;
+import co.cask.cdap.security.spi.authentication.AuthenticationContext;
 import co.cask.cdap.security.store.SecureStoreUtils;
 import co.cask.cdap.spi.hbase.HBaseDDLExecutor;
 import com.google.common.base.Function;
@@ -126,15 +127,17 @@ public abstract class DistributedProgramRunner implements ProgramRunner {
   protected final TokenSecureStoreRenewer secureStoreRenewer;
   private final TwillRunner twillRunner;
   private final Impersonator impersonator;
+  private final AuthenticationContext authenticationContext;
 
   protected DistributedProgramRunner(TwillRunner twillRunner, YarnConfiguration hConf, CConfiguration cConf,
                                      TokenSecureStoreRenewer tokenSecureStoreRenewer,
-                                     Impersonator impersonator) {
+                                     Impersonator impersonator, AuthenticationContext authenticationContext) {
     this.twillRunner = twillRunner;
     this.hConf = hConf;
     this.cConf = cConf;
     this.secureStoreRenewer = tokenSecureStoreRenewer;
     this.impersonator = impersonator;
+    this.authenticationContext = authenticationContext;
   }
 
   protected EventHandler createEventHandler(CConfiguration cConf, ProgramOptions options) {
@@ -452,7 +455,8 @@ public abstract class DistributedProgramRunner implements ProgramRunner {
     Cancellable saveContextCancellable =
       LoggingContextAccessor.setLoggingContext(loggingContext);
     String userArguments = Joiner.on(", ").withKeyValueSeparator("=").join(options.getUserArguments());
-    LOG.info("Starting {} Program '{}' with Arguments [{}]", program.getType(), program.getName(), userArguments);
+    LOG.info("Starting {} Program '{}' with Arguments [{}]. Executing user is {}",
+             program.getType(), program.getName(), userArguments, authenticationContext.getPrincipal().getName());
     saveContextCancellable.cancel();
   }
 

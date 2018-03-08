@@ -28,6 +28,7 @@ import co.cask.cdap.internal.app.runtime.batch.distributed.MapReduceContainerHel
 import co.cask.cdap.proto.ProgramType;
 import co.cask.cdap.security.TokenSecureStoreRenewer;
 import co.cask.cdap.security.impersonation.Impersonator;
+import co.cask.cdap.security.spi.authentication.AuthenticationContext;
 import com.google.common.base.Preconditions;
 import com.google.inject.Inject;
 import org.apache.hadoop.conf.Configuration;
@@ -51,8 +52,8 @@ public final class DistributedMapReduceProgramRunner extends DistributedProgramR
   @Inject
   DistributedMapReduceProgramRunner(TwillRunner twillRunner, YarnConfiguration hConf, CConfiguration cConf,
                                     TokenSecureStoreRenewer tokenSecureStoreRenewer,
-                                    Impersonator impersonator) {
-    super(twillRunner, hConf, cConf, tokenSecureStoreRenewer, impersonator);
+                                    Impersonator impersonator, AuthenticationContext authenticationContext) {
+    super(twillRunner, hConf, cConf, tokenSecureStoreRenewer, impersonator, authenticationContext);
   }
 
   @Override

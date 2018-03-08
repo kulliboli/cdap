@@ -45,12 +45,12 @@ import co.cask.cdap.proto.id.ProgramId;
 import co.cask.cdap.security.TokenSecureStoreRenewer;
 import co.cask.cdap.security.impersonation.Impersonator;
 import co.cask.cdap.security.impersonation.SecurityUtil;
+import co.cask.cdap.security.spi.authentication.AuthenticationContext;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
 import com.google.inject.Inject;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.yarn.conf.YarnConfiguration;
-import org.apache.hive.service.auth.HiveAuthFactory;
 import org.apache.twill.api.ClassAcceptor;
 import org.apache.twill.api.RunId;
 import org.apache.twill.api.TwillController;
@@ -87,8 +87,9 @@ public final class DistributedSparkProgramRunner extends DistributedProgramRunne
   public DistributedSparkProgramRunner(SparkCompat sparkComat, TwillRunner twillRunner,
                                        YarnConfiguration hConf, CConfiguration cConf,
                                        TokenSecureStoreRenewer tokenSecureStoreRenewer,
-                                       Impersonator impersonator, LocationFactory locationFactory) {
-    super(twillRunner, hConf, cConf, tokenSecureStoreRenewer, impersonator);
+                                       Impersonator impersonator, LocationFactory locationFactory,
+                                       AuthenticationContext authenticationContext) {
+    super(twillRunner, hConf, cConf, tokenSecureStoreRenewer, impersonator, authenticationContext);
     this.sparkCompat = sparkComat;
     this.locationFactory = locationFactory;
   }

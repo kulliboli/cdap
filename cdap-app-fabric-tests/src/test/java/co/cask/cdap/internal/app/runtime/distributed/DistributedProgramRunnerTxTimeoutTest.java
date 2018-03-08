@@ -91,12 +91,13 @@ public class DistributedProgramRunnerTxTimeoutTest {
     // System.out.println(new GsonBuilder().setPrettyPrinting().create().toJson(appSpec));
 
     cConf.setInt(TxConstants.Manager.CFG_TX_MAX_TIMEOUT, 60);
-    flowRunner = new DistributedFlowProgramRunner(null, yConf, cConf, null, null, null, null, null);
-    serviceRunner = new DistributedServiceProgramRunner(null, yConf, cConf, null, null);
-    workerRunner = new DistributedWorkerProgramRunner(null, yConf, cConf, null, null);
-    mapreduceRunner = new DistributedMapReduceProgramRunner(null, yConf, cConf, null, null);
-    sparkRunner = new DistributedSparkProgramRunner(SparkCompat.SPARK1_2_10, null, yConf, cConf, null, null, null);
-    workflowRunner = new DistributedWorkflowProgramRunner(null, yConf, cConf, null, null, null);
+    flowRunner = new DistributedFlowProgramRunner(null, yConf, cConf, null, null, null, null, null, null);
+    serviceRunner = new DistributedServiceProgramRunner(null, yConf, cConf, null, null, null);
+    workerRunner = new DistributedWorkerProgramRunner(null, yConf, cConf, null, null, null);
+    mapreduceRunner = new DistributedMapReduceProgramRunner(null, yConf, cConf, null, null, null);
+    sparkRunner = new DistributedSparkProgramRunner(SparkCompat.SPARK1_2_10, null, yConf, cConf, null, null, null,
+                                                    null);
+    workflowRunner = new DistributedWorkflowProgramRunner(null, yConf, cConf, null, null, null, null);
   }
 
   @Test

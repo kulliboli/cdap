@@ -40,6 +40,7 @@ import co.cask.cdap.proto.ProgramType;
 import co.cask.cdap.proto.id.ProgramId;
 import co.cask.cdap.security.TokenSecureStoreRenewer;
 import co.cask.cdap.security.impersonation.Impersonator;
+import co.cask.cdap.security.spi.authentication.AuthenticationContext;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Iterables;
 import com.google.common.io.Closeables;
@@ -72,8 +73,9 @@ public final class DistributedWorkflowProgramRunner extends DistributedProgramRu
   DistributedWorkflowProgramRunner(TwillRunner twillRunner, YarnConfiguration hConf, CConfiguration cConf,
                                    TokenSecureStoreRenewer tokenSecureStoreRenewer,
                                    ProgramRunnerFactory programRunnerFactory,
-                                   Impersonator impersonator) {
-    super(twillRunner, hConf, cConf, tokenSecureStoreRenewer, impersonator);
+                                   Impersonator impersonator,
+                                   AuthenticationContext authenticationContext) {
+    super(twillRunner, hConf, cConf, tokenSecureStoreRenewer, impersonator, authenticationContext);
     this.programRunnerFactory = programRunnerFactory;
   }
 
