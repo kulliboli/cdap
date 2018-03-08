@@ -29,7 +29,7 @@ angular.module(PKG.name + '.feature.hydrator')
     actionCreator.init(rPipelineDetail);
     let runid = $stateParams.runid;
     if (runid) {
-      actionCreator.setCurrentRun(runid);
+      actionCreator.setCurrentRunId(runid);
     }
 
     let runsPoll = actionCreator.pollRuns({

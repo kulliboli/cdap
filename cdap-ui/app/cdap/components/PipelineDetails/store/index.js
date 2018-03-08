@@ -29,7 +29,7 @@ const ACTIONS = {
 
   // Run level Actions
   SET_NEXT_RUN_TIME: 'SET_NEXT_RUN_TIME',
-  SET_CURRENT_RUN: 'SET_CURRENT_RUN',
+  SET_CURRENT_RUN_ID: 'SET_CURRENT_RUN_ID',
   SET_RUNS: 'SET_RUNS',
   SET_STATISTICS: 'SET_STATISTICS',
   SET_USER_RUNTIME_ARGUMENTS: 'SET_USER_RUNTIME_ARGUMENTS',
@@ -142,24 +142,30 @@ const pipelineDetails = (state = DEFAULT_PIPELINE_DETAILS, action = defaultActio
         ...state,
         nextRunTime: action.payload.nextRunTime
       };
-    case ACTIONS.SET_CURRENT_RUN: {
-      let currentRunId = action.payload.runId;
-      let currentRun = state.runs.find(run => run.runid === currentRunId);
-      if (!currentRun) {
-        currentRun = state.runs[0];
-      }
+    case ACTIONS.SET_CURRENT_RUN_ID: {
       return {
         ...state,
-        currentRun,
+        currentRunId: action.payload.runId,
       };
     }
-    case ACTIONS.SET_RUNS:
+    case ACTIONS.SET_RUNS: {
+      let currentRun;
+      let runs = action.payload.runs;
+      if (state.currentRunId) {
+        currentRun = runs.find(run => run.runid === state.currentRunId);
+      }
+      if (!currentRun) {
+        currentRun = runs[0];
+      }
+
       return {
         ...state,
-        runs: action.payload.runs,
+        runs,
+        currentRun,
         runButtonLoading: false,
         stopButtonLoading: false
       };
+    }
     case ACTIONS.SET_STATISTICS:
       return {
         ...state,

@@ -165,9 +165,9 @@ const setMaxConcurrentRuns = (maxConcurrentRuns) => {
   });
 };
 
-const setCurrentRun = (runId) => {
+const setCurrentRunId = (runId) => {
   PipelineDetailStore.dispatch({
-    type: ACTIONS.SET_CURRENT_RUN,
+    type: ACTIONS.SET_CURRENT_RUN_ID,
     payload: { runId }
   });
 };
@@ -324,7 +324,7 @@ export {
   setCheckpointing,
   setNumRecordsPreview,
   setMaxConcurrentRuns,
-  setCurrentRun,
+  setCurrentRunId,
   getRuns,
   pollRuns,
   getNextRunTime,
