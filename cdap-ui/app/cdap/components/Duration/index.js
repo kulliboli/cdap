@@ -17,11 +17,7 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import moment from 'moment';
-import {humanReadableDuration} from 'services/helpers';
-
-const ONE_SECOND = 1000;
-const ONE_MINUTE = 60 * ONE_SECOND;
-const ONE_HOUR = 60 * ONE_MINUTE;
+import {humanReadableDuration, ONE_SECOND_MS, ONE_MIN_SECONDS, ONE_HOUR_SECONDS} from 'services/helpers';
 
 export default class Duration extends Component {
   static propTypes = {
@@ -67,13 +63,13 @@ export default class Duration extends Component {
     let targetTime = newTime;
 
     if (!this.props.isMillisecond) {
-      targetTime *= ONE_SECOND;
+      targetTime *= ONE_SECOND_MS;
     }
 
     if (this.props.showFullDuration) {
       let duration = new Date().valueOf() - targetTime;
       this.setState({
-        displayDuration: humanReadableDuration(duration /= ONE_SECOND)
+        displayDuration: humanReadableDuration(duration /= ONE_SECOND_MS)
       }, this.calculateTimeCallback.bind(this, duration));
 
     } else {
@@ -88,17 +84,17 @@ export default class Duration extends Component {
   }
 
   calculateTimeCallback = (duration) => {
-    let delay = ONE_SECOND;
+    let delay = ONE_SECOND_MS;
 
     if (!this.props.showFullDuration) {
       let absDuration = Math.abs(duration);
 
-      if (absDuration > ONE_HOUR) {
-        delay = 15 * ONE_MINUTE;
-      } else if (absDuration > 5 * ONE_MINUTE) {
-        delay = ONE_MINUTE;
-      } else if (absDuration > 2 * ONE_MINUTE) {
-        delay = 15 * ONE_SECOND;
+      if (absDuration > ONE_HOUR_SECONDS) {
+        delay = 15 * ONE_MIN_SECONDS;
+      } else if (absDuration > 5 * ONE_MIN_SECONDS) {
+        delay = ONE_MIN_SECONDS;
+      } else if (absDuration > 2 * ONE_MIN_SECONDS) {
+        delay = 15 * ONE_SECOND_MS;
       }
     }
 

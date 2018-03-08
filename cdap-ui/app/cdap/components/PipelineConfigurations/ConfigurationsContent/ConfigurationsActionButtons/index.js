@@ -31,26 +31,26 @@ const mapStateToProps = (state, ownProps) => {
     validToSave: state.validToSave,
     pipelineEdited: state.pipelineEdited,
     updatingPipeline: ownProps.updatingPipeline,
-    updatingPipelineAndAction: ownProps.updatingPipelineAndAction,
-    saveAndClose: ownProps.saveAndClose,
-    saveAndAction: ownProps.saveAndAction,
+    updatingPipelineAndRunOrSchedule: ownProps.updatingPipelineAndRunOrSchedule,
+    saveAndCloseModeless: ownProps.saveAndCloseModeless,
+    saveAndRunOrSchedule: ownProps.saveAndRunOrSchedule,
     activeTab: ownProps.activeTab,
     actionLabel: ownProps.actionLabel
   };
 };
 
-const ConfigActionButtons = ({runtimeArgs, validToSave, pipelineEdited, updatingPipeline, updatingPipelineAndAction, saveAndClose, saveAndAction, activeTab, actionLabel}) => {
+const ConfigActionButtons = ({runtimeArgs, validToSave, pipelineEdited, updatingPipeline, updatingPipelineAndRunOrSchedule, saveAndCloseModeless, saveAndRunOrSchedule, activeTab, actionLabel}) => {
   return (
     <div className="configuration-step-navigation">
       <div className="apply-run-container">
         <button
           className="btn btn-primary apply-run"
-          disabled={updatingPipelineAndAction || !validToSave}
-          onClick={saveAndAction.bind(this, pipelineEdited)}
+          disabled={updatingPipelineAndRunOrSchedule || !validToSave}
+          onClick={saveAndRunOrSchedule.bind(this, pipelineEdited)}
         >
           <span>{actionLabel}</span>
           {
-            updatingPipelineAndAction ?
+            updatingPipelineAndRunOrSchedule ?
               <IconSVG
                 name="icon-spinner"
                 className="fa-spin"
@@ -62,7 +62,7 @@ const ConfigActionButtons = ({runtimeArgs, validToSave, pipelineEdited, updating
         <button
           className="btn btn-secondary"
           disabled={updatingPipeline || !validToSave}
-          onClick={saveAndClose.bind(this, pipelineEdited)}
+          onClick={saveAndCloseModeless.bind(this, pipelineEdited)}
         >
           {
             updatingPipeline ?
@@ -100,9 +100,9 @@ ConfigActionButtons.propTypes = {
   validToSave: PropTypes.bool,
   pipelineEdited: PropTypes.bool,
   updatingPipeline: PropTypes.bool,
-  updatingPipelineAndAction: PropTypes.bool,
-  saveAndClose: PropTypes.func,
-  saveAndAction: PropTypes.func,
+  updatingPipelineAndRunOrSchedule: PropTypes.bool,
+  saveAndCloseModeless: PropTypes.func,
+  saveAndRunOrSchedule: PropTypes.func,
   actionLabel: PropTypes.string
 };
 
@@ -113,7 +113,7 @@ export default class ConfigurationsActionButtons extends Component {
     // need 2 states here instead of just 1, to determine which button to show
     // spinning wheel on
     updatingPipeline: false,
-    updatingPipelineAndAction: false
+    updatingPipelineAndRunOrSchedule: false
   };
 
   static propTypes = {
@@ -126,45 +126,45 @@ export default class ConfigurationsActionButtons extends Component {
     action: runPipeline
   };
 
-  close = () => {
+  closeModeless = () => {
     if (typeof this.props.onClose === 'function') {
       this.props.onClose();
     }
   };
 
-  closeAndAction = () => {
-    this.close();
+  closeModelessAndRunOrSchedule = () => {
+    this.closeModeless();
     if (typeof this.props.action === 'function') {
       this.props.action();
     }
   };
 
-  saveAndAction = (pipelineEdited) => {
+  saveAndRunOrSchedule = (pipelineEdited) => {
     applyRuntimeArgs();
     if (!pipelineEdited) {
-      this.closeAndAction();
+      this.closeModelessAndRunOrSchedule();
       return;
     }
 
     this.setState({
-      updatingPipelineAndAction: true
+      updatingPipelineAndRunOrSchedule: true
     });
     updatePipeline()
     .subscribe(() => {
-      this.closeAndAction();
+      this.closeModelessAndRunOrSchedule();
     }, (err) => {
       console.log(err);
     }, () => {
       this.setState({
-        updatingPipelineAndAction: false
+        updatingPipelineAndRunOrSchedule: false
       });
     });
   }
 
-  saveAndClose = (pipelineEdited) => {
+  saveAndCloseModeless = (pipelineEdited) => {
     applyRuntimeArgs();
     if (!pipelineEdited) {
-      this.close();
+      this.closeModeless();
       return;
     }
 
@@ -173,7 +173,7 @@ export default class ConfigurationsActionButtons extends Component {
     });
     updatePipeline()
     .subscribe(() => {
-      this.close();
+      this.closeModeless();
     }, (err) => {
       console.log(err);
     }, () => {
@@ -188,9 +188,9 @@ export default class ConfigurationsActionButtons extends Component {
     return (
       <ConnectedConfigActionButtons
         updatingPipeline={this.state.updatingPipeline}
-        updatingPipelineAndAction={this.state.updatingPipelineAndAction}
-        saveAndClose={this.saveAndClose}
-        saveAndAction={this.saveAndAction}
+        updatingPipelineAndRunOrSchedule={this.state.updatingPipelineAndRunOrSchedule}
+        saveAndCloseModeless={this.saveAndCloseModeless}
+        saveAndRunOrSchedule={this.saveAndRunOrSchedule}
         activeTab={this.props.activeTab}
         actionLabel={actionLabel}
       />

@@ -57,13 +57,13 @@ export default class PipelineStopButton extends Component {
 
     setStopButtonLoading(true);
     this.stopRun()
-    .subscribe(
-      () => {},
-      (err) => {
-        setStopButtonLoading(false);
-        setStopError(err.response || err);
-      }
-    );
+      .subscribe(
+        () => {},
+        (err) => {
+          setStopButtonLoading(false);
+          setStopError(err.response || err);
+        }
+      );
   }
 
   stopRun = (runId = this.props.runs[0].runid) => {

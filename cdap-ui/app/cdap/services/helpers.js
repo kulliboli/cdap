@@ -94,6 +94,7 @@ function humanReadableDate(date, isMilliseconds) {
   return (moment(date * 1000)).format(format);
 }
 
+const ONE_SECOND_MS = 1000;
 const ONE_MIN_SECONDS = 60;
 const ONE_HOUR_SECONDS = ONE_MIN_SECONDS * 60;
 const ONE_DAY_SECONDS = ONE_HOUR_SECONDS * 24;
@@ -311,6 +312,7 @@ export {
   isPluginSink,
   isBatchPipeline,
   composeEnhancers,
+  ONE_SECOND_MS,
   ONE_MIN_SECONDS,
   ONE_HOUR_SECONDS,
   ONE_DAY_SECONDS,
