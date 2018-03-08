@@ -682,10 +682,7 @@ public class ArtifactHttpHandler extends AbstractHttpHandler {
     throws NamespaceNotFoundException, BadRequestException {
 
     final NamespaceId namespace = validateAndGetNamespace(namespaceId);
-    if (namespace.equals(NamespaceId.SYSTEM)) {
-      responder.sendString(HttpResponseStatus.BAD_REQUEST, "Adding artifact to system namespace is not allowed");
-      return null;
-    }
+
     // if version is explicitly given, validate the id now. otherwise version will be derived from the manifest
     // and validated there
     if (artifactVersion != null && !artifactVersion.isEmpty()) {

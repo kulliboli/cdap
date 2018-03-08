@@ -545,7 +545,9 @@ public class AppLifecycleHttpHandler extends AbstractAppFabricHttpHandler {
     }
 
     try {
-      namespaceQueryAdmin.get(namespace);
+      if (!namespace.equals(NamespaceId.SYSTEM)) {
+        namespaceQueryAdmin.get(namespace);
+      }
     } catch (NamespaceNotFoundException e) {
       throw e;
     } catch (Exception e) {

@@ -192,6 +192,9 @@ public class NamespaceHttpHandlerTest extends AppFabricTestBase {
     response = getNamespace(Id.Namespace.DEFAULT.getId());
     Assert.assertEquals(0, getAppList(Id.Namespace.DEFAULT.getId()).size());
     assertResponseCode(200, response);
+    // there is no system namespace
+    response = deleteNamespace(Id.Namespace.SYSTEM.getId());
+    assertResponseCode(404, response);
   }
 
   @Test
@@ -354,9 +357,9 @@ public class NamespaceHttpHandlerTest extends AppFabricTestBase {
     NamespaceAdmin namespaceClient = getInjector().getInstance(NamespaceAdmin.class);
     // test setup creates two namespaces in @BeforeClass, apart from the default namespace which always exists.
     List<NamespaceMeta> namespaces = namespaceClient.list();
-    Assert.assertEquals(4, namespaces.size());
+    Assert.assertEquals(3, namespaces.size());
     Set<NamespaceMeta> expectedNamespaces = ImmutableSet.of(NamespaceMeta.DEFAULT, TEST_NAMESPACE_META1,
-                                                            TEST_NAMESPACE_META2, NamespaceMeta.SYSTEM);
+                                                            TEST_NAMESPACE_META2);
     Assert.assertEquals(expectedNamespaces, Sets.newHashSet(namespaces));
 
     NamespaceMeta namespaceMeta = namespaceClient.get(new NamespaceId(TEST_NAMESPACE1));
@@ -411,7 +414,7 @@ public class NamespaceHttpHandlerTest extends AppFabricTestBase {
     Assert.assertNotNull(namespace);
 
     NamespaceConfig config = GSON.fromJson(namespace.get(CONFIG_FIELD).getAsJsonObject(),
-                                                           NamespaceConfig.class);
+                                           NamespaceConfig.class);
     Assert.assertEquals("prod", config.getSchedulerQueueName());
     Assert.assertEquals(NAME, namespace.get(NAME_FIELD).getAsString());
     Assert.assertEquals(EMPTY, namespace.get(DESCRIPTION_FIELD).getAsString());

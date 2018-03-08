@@ -176,16 +176,13 @@ public final class DefaultNamespaceAdmin implements NamespaceAdmin {
       } else {
         ugi = impersonator.getUGI(namespace);
       }
-
-      if (!NamespaceId.SYSTEM.equals(namespace)) {
-        ImpersonationUtils.doAs(ugi, new Callable<Void>() {
-          @Override
-          public Void call() throws Exception {
-            storageProviderNamespaceAdmin.get().create(metadata);
-            return null;
-          }
-        });
-      }
+      ImpersonationUtils.doAs(ugi, new Callable<Void>() {
+        @Override
+        public Void call() throws Exception {
+          storageProviderNamespaceAdmin.get().create(metadata);
+          return null;
+        }
+      });
     } catch (Throwable t) {
       // failed to create namespace in underlying storage so delete the namespace meta stored in the store earlier
       deleteNamespaceMeta(metadata.getNamespaceId());
@@ -283,7 +280,7 @@ public final class DefaultNamespaceAdmin implements NamespaceAdmin {
       // create default namespace, and hence deleting it may cause undeterministic behavior.
       // Another reason for not deleting the default namespace is that we do not want to call a delete on the default
       // namespace in the storage provider (Hive, HBase, etc), since we re-use their default namespace.
-      if (!NamespaceId.DEFAULT.equals(namespaceId) && !NamespaceId.SYSTEM.equals(namespaceId)) {
+      if (!NamespaceId.DEFAULT.equals(namespaceId)) {
         // Finally delete namespace from MDS and remove from cache
         deleteNamespaceMeta(namespaceId);
 

@@ -82,10 +82,7 @@ public abstract class AbstractNamespaceResourceDeleter implements NamespaceResou
   @Override
   public void deleteResources(NamespaceMeta namespaceMeta) throws Exception {
     final NamespaceId namespaceId = namespaceMeta.getNamespaceId();
-    if (namespaceMeta.getNamespaceId().equals(NamespaceId.SYSTEM)) {
-      deleteSystemNamespaceApplicationData();
-      return;
-    }
+
     // Delete Preferences associated with this namespace
     preferencesStore.deleteProperties(namespaceId.getNamespace());
     // Delete all dashboards associated with this namespace
@@ -129,20 +126,6 @@ public abstract class AbstractNamespaceResourceDeleter implements NamespaceResou
         }
       });
     }
-  }
-
-  private void deleteSystemNamespaceApplicationData() throws Exception {
-    // Delete Preferences associated with this namespace
-    preferencesStore.deleteProperties(NamespaceId.SYSTEM.getNamespace());
-    // Delete all dashboards associated with this namespace
-    dashboardStore.delete(NamespaceId.SYSTEM.getNamespace());
-    // Delete all applications
-    applicationLifecycleService.removeAll(NamespaceId.SYSTEM);
-    queueAdmin.dropAllInNamespace(NamespaceId.SYSTEM);
-    // Delete all the streams in namespace
-    deleteStreams(NamespaceId.SYSTEM);
-    // Delete all meta data
-    store.removeAll(NamespaceId.SYSTEM);
   }
 
   private void deleteMetrics(NamespaceId namespaceId) throws Exception {
