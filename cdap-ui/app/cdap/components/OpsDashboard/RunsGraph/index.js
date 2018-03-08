@@ -27,7 +27,7 @@ require('./RunsGraph.scss');
 
 const RUNS_GRAPH_CONTAINER = 'runs-graph-container';
 
-export default class ClassName extends Component {
+export default class RunsGraph extends Component {
   state = {
     loading: true,
     data: [],
