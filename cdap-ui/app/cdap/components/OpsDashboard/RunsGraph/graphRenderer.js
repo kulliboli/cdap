@@ -50,7 +50,7 @@ export function renderGraph(selector, containerWidth, containerHeight, data) {
   // SETTING DOMAINS
   x.domain(data.map((d) => d.time));
 
-  let yLeftMax = d3.max(data, (d) => Math.max(d.manual + d.schedule, d.running + d.successful + d.failed) );
+  let yLeftMax = d3.max(data, (d) => Math.max(d.manual + d.schedule, d.running + d.successful + d.failed));
   let yRightMax = d3.max(data, (d) => d.delay);
   yLeft.domain([0, yLeftMax * AXIS_BUFFER]);
   yRight.domain([0, yRightMax * AXIS_BUFFER]);
@@ -210,8 +210,6 @@ export function renderGraph(selector, containerWidth, containerHeight, data) {
 
   d3.selectAll('.handler-selector')
     .on('click', (data) => {
-      console.log('data', data);
-
       DashboardStore.dispatch({
         type: DashboardActions.setDisplayBucket,
         payload: {

@@ -100,8 +100,6 @@ function setBuckets(startTime, duration) {
   // hourly or per 5 minutes
   let numBuckets = duration === 1440 ? 24 : 12;
 
-
-
   for (let i = 0; i < numBuckets; i++) {
     let time = moment(startTime).startOf('hour');
     if (duration === 1440) {
@@ -121,7 +119,6 @@ function setBuckets(startTime, duration) {
       runsList: []
     };
   }
-
 
   return {
     buckets,
